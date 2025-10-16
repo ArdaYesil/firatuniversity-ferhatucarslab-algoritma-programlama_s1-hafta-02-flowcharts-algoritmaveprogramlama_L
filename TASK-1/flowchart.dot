@@ -1,0 +1,39 @@
+digraph ATM {
+    rankdir=TB;
+    node [shape=rectangle, style=rounded, fontname="Arial"];
+
+    Start [label="Kart takılır"];
+    Pin [label="PIN girilir"];
+    CheckPin [label="PIN doğru mu?"];
+    BlockCard [label="3 hatalı giriş -> Kart bloke olur"];
+    Balance [label="Bakiye sorgulanır"];
+    Amount [label="Çekilmek istenen tutar girilir"];
+    CheckBalance [label="Yetersiz bakiye?"];
+    CheckMultiple [label="Tutar 20 TL’nin katı mı?"];
+    CheckLimit [label="Günlük limit aşıldı mı?"];
+    Dispense [label="Para verilir ve fiş çıkar"];
+    Another [label="Başka işlem yapmak ister misiniz?"];
+    End [label="Kart iade edilir / Sistem sonu"];
+
+    Start -> Pin;
+    Pin -> CheckPin;
+    CheckPin -> Balance [label="Doğru"];
+    CheckPin -> Pin [label="Hatalı (3'ten az deneme)"];
+    CheckPin -> BlockCard [label="3 hatalı giriş"];
+    BlockCard -> End;
+
+    Balance -> Amount;
+    Amount -> CheckBalance;
+    CheckBalance -> Amount [label="Yetersiz"];
+    CheckBalance -> CheckMultiple [label="Yeterli"];
+
+    CheckMultiple -> Amount [label="Hayır"];
+    CheckMultiple -> CheckLimit [label="Evet"];
+
+    CheckLimit -> Amount [label="Limit aşıldı"];
+    CheckLimit -> Dispense [label="Uygun"];
+
+    Dispense -> Another;
+    Another -> Balance [label="Evet"];
+    Another -> End [label="Hayır"];
+}
